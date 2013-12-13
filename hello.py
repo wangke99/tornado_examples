@@ -18,11 +18,20 @@ define('port', default = 8000, help = 'run on the given port', type = int)
 
 #tornado request handler class
 #calls the method corresponding to the HTTP method of the request
-#useful methods: get_argument, write -- writes the string into the HTTP response
+#useful methods:
+#               get_argument,
+#               write -- writes the string into the HTTP response
+#               set_status  --- set HTTP status code
+
+#if you'd like to replace the default error responses,
+#you can override the write_error method in the RequestHandler class
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
         greeting = self.get_argument('greeting', 'Hello')
         self.write(greeting + ', friendly user!')
+
+    def write_error(self, status_code, **kwargs):
+        self.write("an error occured %d" % status_code)
 
 #make the Tornado application run
 if __name__ == "__main__":
